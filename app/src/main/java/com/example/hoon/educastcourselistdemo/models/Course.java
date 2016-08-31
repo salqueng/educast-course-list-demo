@@ -9,5 +9,7 @@ public class Course {
         public String name;
     }
     public int pk;
+    public Image image;
     public String name;
+    public InnerChannel channel;
 }

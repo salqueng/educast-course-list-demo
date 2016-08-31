@@ -1,5 +1,6 @@
 package com.example.hoon.educastcourselistdemo.scenes.main;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import java.lang.ref.WeakReference;
@@ -11,6 +12,9 @@ import java.util.UUID;
  */
 
 class RMainInteractor extends MainInteractor implements MainActivityOutput {
+    public RMainInteractor(Context context) {
+        super(context);
+    }
 }
 
 class RMainPresenter extends MainPresenter implements MainInteractorOutput {
@@ -23,8 +27,8 @@ class RMainActivity implements MainPresenterOutput {
     }
 
     @Override
-    public void displayCourses(MainModel.CourseList.ViewModel viewModel) {
-        mActivity.displayCourses(viewModel);
+    public void displayCourses(MainModel.CourseList.SuccessViewModel successViewModel) {
+        mActivity.displayCourses(successViewModel);
     }
 }
 
@@ -47,7 +51,7 @@ public class MainConfigurator {
         // TODO: Connect
         RMainActivity rActivity = new RMainActivity(activity);
         RMainPresenter presenter = new RMainPresenter();
-        RMainInteractor interactor = new RMainInteractor();
+        RMainInteractor interactor = new RMainInteractor(activity);
 
         activity.setOutput(interactor);
         presenter.setOutput(rActivity);
@@ -60,6 +64,8 @@ public class MainConfigurator {
         if (sInteractorMap.containsKey(key)) {
             RMainInteractor interactor = sInteractorMap.remove(key).get();
             if (interactor != null) {
+                // restore context
+                interactor.setContext(activity);
                 RMainActivity rActivity = new RMainActivity(activity);
                 RMainPresenter presenter = (RMainPresenter) interactor.getOutput();
                 activity.setOutput(interactor);
