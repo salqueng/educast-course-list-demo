@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.hoon.educastcourselistdemo.R;
+import com.example.hoon.educastcourselistdemo.models.Course;
 import com.example.hoon.educastcourselistdemo.network.VolleyManager;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder> {
 
-    private List<MainModel.CourseList.SuccessViewModel.DisplayedCourse> courseList;
+    private ArrayList<MainModel.CourseList.SuccessViewModel.DisplayedCourse> courseList;
 
     private Context context;
 
@@ -27,7 +28,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder
         this(context, null);
     }
 
-    public MainRecyclerViewAdapter(Context context, List<MainModel.CourseList.SuccessViewModel.DisplayedCourse> list) {
+    public MainRecyclerViewAdapter(Context context, ArrayList<MainModel.CourseList.SuccessViewModel.DisplayedCourse> list) {
         if(list == null){
             this.courseList = new ArrayList<>();
         } else {
@@ -73,12 +74,18 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainViewHolder
     }
 
     public void addAll(List<MainModel.CourseList.SuccessViewModel.DisplayedCourse> courses){
-        courseList.addAll(courses);
-        notifyDataSetChanged();
+        if(courses != null && !courses.isEmpty()) {
+            courseList.addAll(courses);
+            notifyDataSetChanged();
+        }
     }
 
     public void clear(){
         courseList.clear();
         notifyDataSetChanged();
+    }
+
+    public ArrayList<MainModel.CourseList.SuccessViewModel.DisplayedCourse> getList(){
+        return courseList;
     }
 }

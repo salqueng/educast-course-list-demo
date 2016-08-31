@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 
 import com.example.hoon.educastcourselistdemo.R;
 
+import java.util.ArrayList;
+
 interface MainActivityInput {
     void displayCourses(final MainModel.CourseList.SuccessViewModel successViewModel);
 }
@@ -31,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInput
     private enum STATE {
         IDLE, FETCHING, FETCHED
     }
-    private String STATE_KEY = "STATE_KEY";
+    private static final String LIST_KEY = "LIST_KEY";
+    private static final String STATE_KEY = "STATE_KEY";
     private STATE mCurrentState;
 
     private RecyclerView mRecyclerView;
@@ -54,6 +57,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityInput
             updateState(STATE.IDLE);
         } else {
             updateState(STATE.valueOf(savedInstanceState.getString(STATE_KEY)));
+            // restore data
+            if(mCurrentState == STATE.FETCHED){
+                ArrayList<MainModel.CourseList.SuccessViewModel.DisplayedCourse> list =
+                        savedInstanceState.getParcelableArrayList(LIST_KEY);
+                ((MainRecyclerViewAdapter) mRecyclerView.getAdapter()).addAll(list);
+            }
+
         }
     }
 
@@ -80,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInput
     protected void onSaveInstanceState(Bundle outState) {
         MainConfigurator.getInstance().saveConfiguration(this, outState);
         outState.putString(STATE_KEY, mCurrentState.name());
+        if(mCurrentState == STATE.FETCHED) {
+            outState.putParcelableArrayList(LIST_KEY, ((MainRecyclerViewAdapter) mRecyclerView.getAdapter()).getList());
+        }
 
         super.onSaveInstanceState(outState);
     }
